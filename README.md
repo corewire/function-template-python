@@ -36,3 +36,47 @@ $ crossplane xpkg build -f package --embed-runtime-image=runtime
 [python]: https://python.org
 [docker]: https://www.docker.com
 [cli]: https://docs.crossplane.io/latest/cli
+
+
+## Containerized Development
+
+If you prefer to develop in a containerized environment, you can use the provided Dockerfile and docker-compose.yml files located in `development` to do so.
+You can either use devcontainers, docker or compose to develop in a containerized environment that reloads itself on changes.
+
+### VsCode: Devcontainers
+- You can develop inside a [devcontainer](https://code.visualstudio.com/docs/devcontainers/containers#_create-a-devcontainerjson-file) using the definition in `.devcontainer.json`.
+
+### Hot reload 
+- In the  `development` folder you can find a docker-compose file that will mount the current folder into the container and reload the container on changes using its entrypoint. 
+- The entrypoint watches the `function` and `test` directories and the pyproject.toml file for changes and reloads the container on changes.
+- By default it will run: 
+  - `hatch run lint:check`
+  - `hatch run test:unit`
+  - `hatch run function --insecure --debug`
+- That enables you to quickly iterate on your function and test it locally using the crossplane cli.
+
+#### Docker (Compose)
+- In one terminal Build + run the dev container image:
+   ``` 
+   $ docker build -f development/Dockerfile -t crossplane-function-python-dev .
+   $ docker run -p 9443:9443 -v .:/build --rm -it crossplane-function-python-dev
+   ```
+   
+   or
+   
+   ``` 
+   $ docker run -p 9443:9443 -v .:/build --rm -it $(docker build -f development/Dockerfile -q .)
+   ```
+   
+   or
+   
+   ``` 
+   $ cd development
+   $ docker compose up --build
+   ```
+
+- In another terminal run the render command:
+``` 
+$ crossplane beta render xr.yaml composition.yaml functions.yaml 
+```
+

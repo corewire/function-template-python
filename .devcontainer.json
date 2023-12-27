@@ -1,0 +1,12 @@
+{
+    "name": "crossplane-function-python-dev",
+    "build": {
+      "dockerfile": "development/Dockerfile",
+      "context": "."
+    },
+    "overrideCommand":  true,
+    "forwardPorts": ["9443:9443"],
+    "workspaceMount": "source=${localWorkspaceFolder},target=/build,type=bind,consistency=cached",
+    "workspaceFolder": "/build"
+  }
+  

@@ -1,0 +1,11 @@
+services:
+  function:
+    build:  
+      context: ..
+      dockerfile: development/Dockerfile
+    ports:
+      - "9443:9443"
+    volumes:
+      - ..:/build
+    
+    
